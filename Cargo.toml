@@ -1,0 +1,8 @@
+[package]
+name = "hyperres_pubgrub"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pubgrub = { git = "https://github.com/pubgrub-rs/pubgrub", branch = "dev" }
+rustc-hash = "=1.1.0"
