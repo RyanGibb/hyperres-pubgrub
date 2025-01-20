@@ -4,7 +4,7 @@ fn main() {
     let mut dependency_provider = OfflineDependencyProvider::<&str, Ranges<u32>>::new();
 
     dependency_provider.add_dependencies("A", 1u32, [
-        // we use a package of the same name but different variables to represent this dependency on either OR node, but this doesn't generalise
+        // proxy package
         ("&", Ranges::singleton(0u32)),
         ("&", Ranges::singleton(1u32)),
     ]);
@@ -14,7 +14,7 @@ fn main() {
     ]);
     dependency_provider.add_dependencies("&", 1u32, [
         ("B", Ranges::singleton(2u32)),
-        // TODO can we depict the conflict with C?
+        // we can't depict the conflict with C
     ]);
     dependency_provider.add_dependencies("B", 1u32, []);
     dependency_provider.add_dependencies("B", 2u32, []);

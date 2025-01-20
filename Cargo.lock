@@ -25,14 +25,14 @@ name = "hyperres_pubgrub"
 version = "0.1.0"
 dependencies = [
  "pubgrub",
- "rustc-hash 1.1.0",
+ "rustc-hash",
 ]
 
 [[package]]
 name = "indexmap"
-version = "2.7.0"
+version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62f822373a4fe84d4bb149bf54e584a7f4abec90e072ed49cda0edea5b95471f"
+checksum = "8c9c992b02b5b4c94ea26e32fe5bccb7aa7d9f390ab5c1221ff895bc7ea8b652"
 dependencies = [
  "equivalent",
  "hashbrown",
@@ -72,7 +72,7 @@ dependencies = [
  "indexmap",
  "log",
  "priority-queue",
- "rustc-hash 2.1.0",
+ "rustc-hash",
  "thiserror",
  "version-ranges",
 ]
@@ -91,12 +91,6 @@ name = "rustc-hash"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
-
-[[package]]
-name = "rustc-hash"
-version = "2.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7fb8039b3032c191086b10f11f319a6e99e1e82889c5cc6046f515c9db1d497"
 
 [[package]]
 name = "smallvec"
