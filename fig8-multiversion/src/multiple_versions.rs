@@ -303,6 +303,30 @@ pub mod tests {
     }
 
     #[test]
+    /// "a" depends on "d"@1, "d"@2, and "d"@3 via "b" and "c".
+    fn success_when_triple_version() {
+        let mut index = Index::new();
+        index.add_deps("a", (1, 0, 0), &[("b", (1, 0, 0)..(2, 0, 0))]);
+        index.add_deps("a", (1, 0, 0), &[("c", (1, 0, 0)..(2, 0, 0))]);
+        index.add_deps("b", (1, 0, 0), &[("d", (1, 0, 0)..(3, 0, 0))]);
+        index.add_deps("c", (1, 0, 0), &[("d", (2, 0, 0)..(4, 0, 0))]);
+        index.add_deps::<R>("d", (1, 0, 0), &[]);
+        index.add_deps::<R>("d", (2, 0, 0), &[]);
+        index.add_deps::<R>("d", (3, 0, 0), &[]);
+        assert_map_eq(
+            &resolve(&index, "a#1", (1, 0, 0)).unwrap(),
+            &select(&[
+                ("a#1", (1, 0, 0)),
+                ("b#1", (1, 0, 0)),
+                ("c#1", (1, 0, 0)),
+                ("d#2", (2, 0, 0)),
+                ("d#3", (3, 0, 0)),
+            ]),
+        );
+    }
+
+
+    #[test]
     /// "a" depends on "d"@1.0 and "d"@1.5 via "b" and "c" which is forbidden
     fn fail_when_same_bucket() {
         let mut index = Index::new();

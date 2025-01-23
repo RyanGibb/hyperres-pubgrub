@@ -3,8 +3,6 @@ use core::ops::RangeFull;
 
 use hyperres_pubgrub_fig9_features::index::Index;
 use hyperres_pubgrub_fig9_features::optional_deps::Package;
-use pubgrub::type_aliases::SelectedDependencies;
-use pubgrub::version::SemanticVersion as SemVer;
 use std::collections::HashMap;
 use pubgrub::solver::{Dependencies, DependencyProvider};
 use std::str::FromStr;
