@@ -116,7 +116,6 @@ impl Index {
                     .unwrap()
                     .get(&source.1)
                     .unwrap()
-                    // TODO
                     .mandatory
                     .get(target)
                     .unwrap();
@@ -172,13 +171,13 @@ impl DependencyProvider<Package, SemVer> for Index {
             None => return Ok(Dependencies::Unknown),
             Some(all_versions) => all_versions,
         };
-        let deps = match all_versions.get(version) {
-            None => return Ok(Dependencies::Unknown),
-            Some(deps) => deps,
-        };
 
         match package {
             Package::Bucket(pkg) => {
+                let deps = match all_versions.get(version) {
+                    None => return Ok(Dependencies::Unknown),
+                    Some(deps) => deps,
+                };
                 // If we asked for a base package, we return the mandatory dependencies.
                 Ok(Dependencies::Known(from_deps(pkg, version, &deps.mandatory)))
             },
@@ -192,7 +191,6 @@ impl DependencyProvider<Package, SemVer> for Index {
                 };
                 let (target_bucket, _, _) = version.clone().into();
                 let bucket_range = Range::between((target_bucket, 0, 0), (target_bucket + 1, 0, 0));
-                // TODO what if feature package has optional deps
                 let target_range = proxy_deps.mandatory.get(target).unwrap();
                 let mut deps = Map::default();
                 let bucket = Bucket {
@@ -210,15 +208,21 @@ impl DependencyProvider<Package, SemVer> for Index {
                 Ok(Dependencies::Known(deps))
             }
             // If this is a feature package we concatenate the feature deps with a dependency to the base package.
-            Package::Feature { base, feature } => match deps.optional.get(feature) {
-                None => Ok(Dependencies::Unknown),
-                Some(feature_deps) => {
-                    let mut all_deps = from_deps(base, version, feature_deps);
-                    all_deps.insert(
-                        Package::Bucket(base.clone()),
-                        Range::exact(version.clone()),
-                    );
-                    Ok(Dependencies::Known(all_deps))
+            Package::Feature { base, feature } => {
+                let deps = match all_versions.get(version) {
+                    None => return Ok(Dependencies::Unknown),
+                    Some(deps) => deps,
+                };
+                match deps.optional.get(feature) {
+                    None => Ok(Dependencies::Unknown),
+                    Some(feature_deps) => {
+                        let mut all_deps = from_deps(base, version, feature_deps);
+                        all_deps.insert(
+                            Package::Bucket(base.clone()),
+                            Range::exact(version.clone()),
+                        );
+                        Ok(Dependencies::Known(all_deps))
+                    }
                 }
             },
         }
